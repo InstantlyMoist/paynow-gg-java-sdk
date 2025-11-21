@@ -2,7 +2,7 @@
 
 A Java SDK for the [PayNow.gg API](https://paynow.gitbook.io/paynow-api)
 
-## Installation
+## Installation 
 
 ### Maven
 
