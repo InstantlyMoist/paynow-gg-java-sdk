@@ -125,16 +125,12 @@
                                 <java8>true</java8>
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <serializationLibrary>gson</serializationLibrary>
-                                <useRxJava>false</useRxJava>
-                                <useRxJava2>false</useRxJava2>
-                                <useRxJava3>false</useRxJava3>
                                 <openApiNullable>false</openApiNullable>
                                 <useBeanValidation>false</useBeanValidation>
                                 <operationIdCamelCase>true</operationIdCamelCase>
                             </configOptions>
                             <skipIfSpecIsUnchanged>false</skipIfSpecIsUnchanged>
                             <removeOperationIdPrefix>true</removeOperationIdPrefix>
-                            <removeOperationIdPrefixDelimiter>_</removeOperationIdPrefixDelimiter>
                         </configuration>
                     </execution>
                     <execution>
@@ -157,16 +153,12 @@
                                 <java8>true</java8>
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <serializationLibrary>gson</serializationLibrary>
-                                <useRxJava>false</useRxJava>
-                                <useRxJava2>false</useRxJava2>
-                                <useRxJava3>false</useRxJava3>
                                 <openApiNullable>false</openApiNullable>
                                 <useBeanValidation>false</useBeanValidation>
                                 <operationIdCamelCase>true</operationIdCamelCase>
                             </configOptions>
                             <skipIfSpecIsUnchanged>false</skipIfSpecIsUnchanged>
                             <removeOperationIdPrefix>true</removeOperationIdPrefix>
-                            <removeOperationIdPrefixDelimiter>_</removeOperationIdPrefixDelimiter>
                         </configuration>
                     </execution>
                 </executions>
