@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
+    inputs:
   push:
     branches:
       - master
@@ -34,18 +35,38 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Generate API code & check for changes
+      - name: Generate API code & check for changes using hash
         id: generate
         run: |
           # Generate sources
           mvn generate-sources
           
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "changes_detected=true" >> $GITHUB_OUTPUT
-            echo "Changes detected after generation"
+          # Create hash of generated files
+          if [ -d "target/generated-sources" ]; then
+            NEW_HASH=$(find target/generated-sources -type f -name "*.java" -exec sha256sum {} \; | sort | sha256sum | cut -d' ' -f1)
+            echo "Generated files hash: $NEW_HASH"
           else
-            echo "changes_detected=false" >> $GITHUB_OUTPUT
-            echo "No changes detected"
+            echo "Error: Generated sources directory not found"
+            exit 1
+          fi
+          
+          # Check if hash file exists and compare
+          if [ -f ".api-hash" ]; then
+            OLD_HASH=$(cat .api-hash)
+            echo "Previous hash: $OLD_HASH"
+            
+            if [ "$NEW_HASH" != "$OLD_HASH" ]; then
+              echo "changes_detected=true" >> $GITHUB_OUTPUT
+              echo "Changes detected - hash changed from $OLD_HASH to $NEW_HASH"
+              echo "$NEW_HASH" > .api-hash
+            else
+              echo "changes_detected=false" >> $GITHUB_OUTPUT
+              echo "No changes detected - hash unchanged"
+            fi
+          else
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+            echo "First run - creating hash file"
+            echo "$NEW_HASH" > .api-hash
           fi
       
       - name: Bump version
