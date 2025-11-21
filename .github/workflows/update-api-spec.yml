@@ -1,0 +1,84 @@
+name: Update API Spec
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-generate-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Generate API code & check for changes
+        id: generate
+        run: |
+          # Generate sources
+          mvn generate-sources
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+            echo "Changes detected after generation"
+          else
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          fi
+      
+      - name: Bump version
+        if: steps.generate.outputs.changes_detected == 'true'
+        id: version
+        run: |
+          # Extract current version from pom.xml
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          
+          # Increment patch version
+          IFS='.' read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=${VERSION_PARTS[2]}
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+          
+          # Update pom.xml version
+          mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
+          
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Bumped to $NEW_VERSION"
+      
+      - name: Build and test
+        if: steps.generate.outputs.changes_detected == 'true'
+        run: |
+          mvn clean compile test
+      
+      - name: Create Git tag for JitPack
+        if: steps.generate.outputs.changes_detected == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add .
+          git commit -m "upd: openapi spec ${{ steps.version.outputs.new_version }}"
+          git tag -a "${{ steps.version.outputs.new_version }}" -m "Release ${{ steps.version.outputs.new_version }}"
+          git push origin main
+          git push origin "${{ steps.version.outputs.new_version }}"
