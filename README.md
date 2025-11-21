@@ -52,7 +52,7 @@ import gg.paynow.sdk.storefront.api.ProductsApi;
 import gg.paynow.sdk.storefront.client.ApiException;
 import gg.paynow.sdk.storefront.model.StorefrontProductDto;
 
-private static final String STORE_ID = "484424470996459520";
+private static final String STORE_ID = "411486491630370816";
 private static final PayNowClient client = PayNowClient.forStorefront(STORE_ID);
 
 public static void main(String[] args) throws ApiException {
