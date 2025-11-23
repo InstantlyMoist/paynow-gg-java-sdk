@@ -5,3 +5,4 @@ install:
   - java -version
   - echo "Using Maven version:"
   - mvn --version
+  - mvn clean install -DskipTests
