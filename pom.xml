@@ -81,6 +81,12 @@
         </dependency>
 
         <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.gsonfire</groupId>
             <artifactId>gson-fire</artifactId>
             <version>1.8.5</version>
@@ -179,27 +185,6 @@
                                 <source>${project.build.directory}/generated-sources/management/src/main/java</source>
                                 <source>${project.build.directory}/generated-sources/storefront/src/main/java</source>
                             </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.4.1</version>
-                <executions>
-                    <execution>
-                        <id>enforce-java</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>[11,12]</version>
-                                </requireJavaVersion>
-                            </rules>
                         </configuration>
                     </execution>
                 </executions>
