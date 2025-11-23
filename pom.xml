@@ -89,7 +89,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>openapi-generator</artifactId>
-            <version>7.17.0</version>
+            <version>6.6.0</version>
         </dependency>
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
@@ -103,7 +103,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.17.0</version>
+                <version>6.6.0</version>
                 <executions>
                     <execution>
                         <id>generate-management-api</id>

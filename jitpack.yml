@@ -1,8 +1,11 @@
 jdk:
   - openjdk11
+before_install:
+  - export JAVA_HOME=$JAVA11_HOME
+  - export PATH=$JAVA_HOME/bin:$PATH
 install:
   - echo "Using Java version:"
   - java -version
   - echo "Using Maven version:"
   - mvn --version
-  - mvn clean install -DskipTests
+  - mvn clean install -DskipTests -Dmaven.compiler.source=11 -Dmaven.compiler.target=11
