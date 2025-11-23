@@ -1,2 +1,7 @@
 jdk:
   - openjdk11
+install:
+  - echo "Using Java version:"
+  - java -version
+  - echo "Using Maven version:"
+  - mvn --version
