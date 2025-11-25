@@ -33,6 +33,17 @@ public class PayNowClient {
         return new PayNowClient(null, createStorefrontClient(storeId));
     }
     
+    /**
+     * Creates a PayNowClient for storefront API operations with customer authentication.
+     * 
+     * @param storeId The storefront store ID
+     * @param customerAuthToken The customer authentication token (JWT or similar)
+     * @return A PayNowClient configured for storefront operations with authentication
+     */
+    public static PayNowClient forStorefrontWithAuth(String storeId, String customerAuthToken) {
+        return new PayNowClient(null, createStorefrontClientWithAuth(storeId, customerAuthToken));
+    }
+    
     private static ApiClient createManagementClient(String apiKey) {
         ApiClient client = new ApiClient();
         client.setApiKey(apiKey);
@@ -47,6 +58,23 @@ public class PayNowClient {
         // Set the store ID as a default header for all storefront API calls
         if (storeId != null && !storeId.trim().isEmpty()) {
             client.addDefaultHeader("x-paynow-store-id", storeId);
+        }
+        
+        return client;
+    }
+    
+    private static gg.paynow.sdk.storefront.client.ApiClient createStorefrontClientWithAuth(String storeId, String customerAuthToken) {
+        gg.paynow.sdk.storefront.client.ApiClient client = new gg.paynow.sdk.storefront.client.ApiClient();
+        client.setBasePath("https://api.paynow.gg");
+        
+        // Set the store ID as a default header for all storefront API calls
+        if (storeId != null && !storeId.trim().isEmpty()) {
+            client.addDefaultHeader("x-paynow-store-id", storeId);
+        }
+        
+        // Set the customer authentication token
+        if (customerAuthToken != null && !customerAuthToken.trim().isEmpty()) {
+            client.addDefaultHeader("Authorization", customerAuthToken);
         }
         
         return client;
@@ -110,5 +138,22 @@ public class PayNowClient {
      */
     public gg.paynow.sdk.storefront.client.ApiClient getStorefrontClient() {
         return storefrontClient;
+    }
+    
+    /**
+     * Sets the customer authorization token for storefront operations.
+     * This allows adding authentication to an existing storefront client.
+     * 
+     * @param customerAuthToken The customer authentication token (JWT or similar)
+     * @throws RuntimeException if the storefront client is not configured
+     */
+    public void setStorefrontAuth(String customerAuthToken) {
+        if (storefrontClient == null) {
+            throw new RuntimeException("Storefront client not configured. Create a storefront client first.");
+        }
+        
+        if (customerAuthToken != null && !customerAuthToken.trim().isEmpty()) {
+            storefrontClient.addDefaultHeader("Authorization", customerAuthToken);
+        }
     }
 }

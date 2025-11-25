@@ -109,7 +109,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>6.6.0</version>
+                <version>7.17.0</version>
                 <executions>
                     <execution>
                         <id>generate-management-api</id>
@@ -127,8 +127,6 @@
                             <modelPackage>gg.paynow.sdk.management.model</modelPackage>
                             <invokerPackage>gg.paynow.sdk.management.client</invokerPackage>
                             <configOptions>
-                                <dateLibrary>java8</dateLibrary>
-                                <java8>true</java8>
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <serializationLibrary>gson</serializationLibrary>
                                 <openApiNullable>false</openApiNullable>
@@ -155,8 +153,6 @@
                             <modelPackage>gg.paynow.sdk.storefront.model</modelPackage>
                             <invokerPackage>gg.paynow.sdk.storefront.client</invokerPackage>
                             <configOptions>
-                                <dateLibrary>java8</dateLibrary>
-                                <java8>true</java8>
                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                                 <serializationLibrary>gson</serializationLibrary>
                                 <openApiNullable>false</openApiNullable>

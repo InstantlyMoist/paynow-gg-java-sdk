@@ -28,6 +28,17 @@ public class PayNowConfig {
         return PayNowClient.forStorefront(storeId);
     }
     
+    /**
+     * Creates a PayNowClient configured for storefront API operations with customer authentication.
+     * 
+     * @param storeId The store ID for storefront operations
+     * @param customerAuthToken The customer authentication token
+     * @return A PayNowClient instance configured for storefront operations with authentication
+     */
+    public static PayNowClient storefrontWithAuth(String storeId, String customerAuthToken) {
+        return PayNowClient.forStorefrontWithAuth(storeId, customerAuthToken);
+    }
+    
     // Private constructor to prevent instantiation
     private PayNowConfig() {
         throw new UnsupportedOperationException("PayNowConfig is a utility class and cannot be instantiated");
