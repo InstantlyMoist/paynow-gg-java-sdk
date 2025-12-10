@@ -109,7 +109,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.17.0</version>
+                <version>7.2.0</version>
                 <executions>
                     <execution>
                         <id>generate-management-api</id>
@@ -132,6 +132,7 @@
                                 <openApiNullable>false</openApiNullable>
                                 <useBeanValidation>false</useBeanValidation>
                                 <operationIdCamelCase>true</operationIdCamelCase>
+                                <disallowAdditionalPropertiesIfNotPresent>false</disallowAdditionalPropertiesIfNotPresent>
                             </configOptions>
                             <skipIfSpecIsUnchanged>false</skipIfSpecIsUnchanged>
                             <removeOperationIdPrefix>true</removeOperationIdPrefix>
@@ -158,6 +159,7 @@
                                 <openApiNullable>false</openApiNullable>
                                 <useBeanValidation>false</useBeanValidation>
                                 <operationIdCamelCase>true</operationIdCamelCase>
+                                <disallowAdditionalPropertiesIfNotPresent>false</disallowAdditionalPropertiesIfNotPresent>
                             </configOptions>
                             <skipIfSpecIsUnchanged>false</skipIfSpecIsUnchanged>
                             <removeOperationIdPrefix>true</removeOperationIdPrefix>
