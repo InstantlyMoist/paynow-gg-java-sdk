@@ -6,7 +6,7 @@
 
     <groupId>gg.paynow</groupId>
     <artifactId>java-sdk</artifactId>
-    <version>1.0.41</version>
+    <version>1.0.42</version>
     <packaging>jar</packaging>
 
     <name>PayNow Java SDK</name>
