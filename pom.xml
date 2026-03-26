@@ -144,7 +144,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>https://api.paynow.gg/swagger/storefront-api/openapi.json</inputSpec>
+                            <inputSpec>${project.basedir}/build/storefront-api-merged.json</inputSpec>
                             <generatorName>java</generatorName>
                             <library>okhttp-gson</library>
                             <output>${project.build.directory}/generated-sources/storefront</output>
