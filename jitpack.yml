@@ -1,6 +1,7 @@
 jdk:
   - openjdk11
 before_install:
+  - sudo apt-get update -qq && sudo apt-get install -y -qq jq
   - export JAVA_HOME=$JAVA11_HOME
   - export PATH=$JAVA_HOME/bin:$PATH
 install:
