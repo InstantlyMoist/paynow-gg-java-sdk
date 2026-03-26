@@ -145,12 +145,8 @@ jq --argjson mgmt_schemas "$MANAGEMENT_SCHEMAS" '
   "additionalProperties": false
 } |
 
-# Module type enum
-.components.schemas.ModuleType = {
-  "type": "string",
-  "description": "The type of storefront module.",
-  "enum": ["payment_goal", "recent_payments", "top_customer", "giftcard_balance", "text_box"]
-} |
+# Module type — defined as a plain string to avoid openapi-generator 3.1.x enum bugs.
+# Known values: payment_goal, recent_payments, top_customer, giftcard_balance, text_box
 
 # Module data wrapper — uses a generic settings object since the type varies
 .components.schemas.ModuleDataDto = {
@@ -182,7 +178,8 @@ jq --argjson mgmt_schemas "$MANAGEMENT_SCHEMAS" '
   "required": ["id", "data"],
   "properties": {
     "id": {
-      "$ref": "#/components/schemas/ModuleType"
+      "type": "string",
+      "description": "The type of storefront module. Known values: payment_goal, recent_payments, top_customer, giftcard_balance, text_box."
     },
     "data": {
       "$ref": "#/components/schemas/ModuleDataDto"
