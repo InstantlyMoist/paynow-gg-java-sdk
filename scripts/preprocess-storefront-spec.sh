@@ -10,9 +10,19 @@
 # Usage: ./scripts/preprocess-storefront-spec.sh [output-path]
 #   output-path  defaults to build/storefront-api-merged.json
 #
-# Requires: curl, jq
+# Requires: curl, jq (jq is auto-downloaded if missing)
 #
 set -euo pipefail
+
+# Auto-install jq if not available
+if ! command -v jq &>/dev/null; then
+  echo "[preprocess] jq not found, downloading static binary..."
+  JQ_BIN="${TMPDIR:-/tmp}/jq"
+  curl -sS -L -o "$JQ_BIN" "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64"
+  chmod +x "$JQ_BIN"
+  export PATH="$(dirname "$JQ_BIN"):$PATH"
+  echo "[preprocess] jq installed to $JQ_BIN"
+fi
 
 STOREFRONT_URL="https://api.paynow.gg/swagger/storefront-api/openapi.json"
 MANAGEMENT_URL="https://api.paynow.gg/swagger/management-api/openapi.json"
