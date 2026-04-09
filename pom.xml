@@ -143,6 +143,7 @@
                             <inputSpec>https://api.paynow.gg/swagger/management-api/openapi.json</inputSpec>
                             <generatorName>java</generatorName>
                             <library>okhttp-gson</library>
+                            <templateDirectory>${project.basedir}/templates</templateDirectory>
                             <output>${project.build.directory}/generated-sources/management</output>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
@@ -170,6 +171,7 @@
                             <inputSpec>${project.basedir}/build/storefront-api-merged.json</inputSpec>
                             <generatorName>java</generatorName>
                             <library>okhttp-gson</library>
+                            <templateDirectory>${project.basedir}/templates</templateDirectory>
                             <output>${project.build.directory}/generated-sources/storefront</output>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
