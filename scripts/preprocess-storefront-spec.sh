@@ -50,6 +50,8 @@ SCHEMAS_FROM_MANAGEMENT=(
   "PaymentDeclineCode"
   "SalesTaxJurisdictionDto"
   "SalesTaxJurisdictionTaxDto"
+  "OrderCouponUsageDto"
+  "OrderGiftCardUsageDto"
 )
 
 echo "[preprocess] Extracting ${#SCHEMAS_FROM_MANAGEMENT[@]} schemas from management spec..."
