@@ -7,6 +7,10 @@
 # payment goals, top customers, etc.) and is used by the headless template
 # but is not part of the official API spec.
 #
+# Also downgrades both specs from OpenAPI 3.1 to 3.0 (openapi-generator 7.2.0
+# turns 3.1 primitives into java.lang.Object) and writes the downgraded
+# management spec next to the output as management-api.json.
+#
 # Usage: ./scripts/preprocess-storefront-spec.sh [output-path]
 #   output-path  defaults to build/storefront-api-merged.json
 #
@@ -36,6 +40,42 @@ STOREFRONT_SPEC=$(curl -sS "$STOREFRONT_URL")
 
 echo "[preprocess] Downloading management spec..."
 MANAGEMENT_SPEC=$(curl -sS "$MANAGEMENT_URL")
+
+# PayNow now serves OpenAPI 3.1 specs, but openapi-generator 7.2.0 mishandles
+# 3.1 (every primitive property degrades to java.lang.Object and enums become
+# free-form objects). The specs only use one 3.1-only construct — nullable
+# type arrays like "type": ["null", "integer"] — so downgrade them to
+# 3.0-style "nullable: true" and rewrite the version marker.
+DOWNCONVERT_3_1_TO_3_0='
+  .openapi = "3.0.3"
+  | walk(
+      if type == "object" and (.type? | type) == "array" then
+        .type as $types
+        | ([$types[] | select(. != "null")]) as $nonNull
+        | (if ($types | index("null")) != null then .nullable = true else . end)
+        | (if ($nonNull | length) > 0 then .type = $nonNull[0] else del(.type) end)
+      elif type == "object" and .type? == "null" then
+        del(.type) | .nullable = true
+      else
+        .
+      end
+    )
+  | walk(
+      if type == "object" and has("additionalProperties")
+         and ((.type? // "") | IN("string", "integer", "number", "boolean")) then
+        del(.additionalProperties)
+      else
+        .
+      end
+    )
+'
+
+STOREFRONT_SPEC=$(jq "$DOWNCONVERT_3_1_TO_3_0" <<< "$STOREFRONT_SPEC")
+MANAGEMENT_SPEC=$(jq "$DOWNCONVERT_3_1_TO_3_0" <<< "$MANAGEMENT_SPEC")
+
+MANAGEMENT_OUTPUT="$(dirname "$OUTPUT")/management-api.json"
+echo "[preprocess] Writing downgraded management spec to $MANAGEMENT_OUTPUT..."
+jq . <<< "$MANAGEMENT_SPEC" > "$MANAGEMENT_OUTPUT"
 
 # Schemas to copy from management spec that don't exist in storefront.
 # These are needed by OrderDto which is referenced by the modules/prepared response.

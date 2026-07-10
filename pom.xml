@@ -6,7 +6,7 @@
 
     <groupId>gg.paynow</groupId>
     <artifactId>java-sdk</artifactId>
-    <version>1.0.60</version>
+    <version>1.0.70</version>
     <packaging>jar</packaging>
 
     <name>PayNow Java SDK</name>
@@ -140,7 +140,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>https://api.paynow.gg/swagger/management-api/openapi.json</inputSpec>
+                            <inputSpec>${project.basedir}/build/management-api.json</inputSpec>
                             <generatorName>java</generatorName>
                             <library>okhttp-gson</library>
                             <templateDirectory>${project.basedir}/templates</templateDirectory>
