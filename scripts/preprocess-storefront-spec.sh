@@ -73,6 +73,25 @@ DOWNCONVERT_3_1_TO_3_0='
 STOREFRONT_SPEC=$(jq "$DOWNCONVERT_3_1_TO_3_0" <<< "$STOREFRONT_SPEC")
 MANAGEMENT_SPEC=$(jq "$DOWNCONVERT_3_1_TO_3_0" <<< "$MANAGEMENT_SPEC")
 
+# The storefront endpoints hand out partial projections of the management DTOs.
+# /modules/prepared for example returns an OrderDto carrying only customer,
+# currency, lines and the totals, while the spec marks 38 of its properties as
+# required — the generated validateJsonElement then rejects the whole response
+# with "The required field `tax_amount` is not found in the JSON string".
+# Drop every schema-level required list so the models parse whatever arrives;
+# a client gains nothing from refusing a payload it can otherwise read.
+# Only array-valued "required" keys mark schema requirements, the boolean
+# "required: true" on parameters is left alone.
+STRIP_SCHEMA_REQUIRED='
+  .components.schemas |= walk(
+      if type == "object" and (.required? | type) == "array" then
+        del(.required)
+      else
+        .
+      end
+    )
+'
+
 MANAGEMENT_OUTPUT="$(dirname "$OUTPUT")/management-api.json"
 echo "[preprocess] Writing downgraded management spec to $MANAGEMENT_OUTPUT..."
 jq . <<< "$MANAGEMENT_SPEC" > "$MANAGEMENT_OUTPUT"
@@ -285,7 +304,7 @@ jq --argjson mgmt_schemas "$MANAGEMENT_SCHEMAS" '
   }
 }
 
-' <<< "$STOREFRONT_SPEC" > "$OUTPUT"
+' <<< "$STOREFRONT_SPEC" | jq "$STRIP_SCHEMA_REQUIRED" > "$OUTPUT"
 
 echo "[preprocess] Merged spec written to $OUTPUT"
 echo "[preprocess] Done."
